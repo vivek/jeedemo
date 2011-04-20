@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	template="/WEB-INF/templates/template.xhtml">
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewParam name="user" value="#{homeBean.username}" />
+			<f:viewParam name="tag" value="#{homeBean.tag}" />
+			<f:viewParam name="firstResult" value="#{homeBean.firstResult}" />
+		</f:metadata>
+
+		<h:panelGroup styleClass="bookmarks">
+			<h1><h:outputText value="Links" /> <h:outputText
+				value=" by #{homeBean.username}" rendered="#{homeBean.userView}" />
+			<h:outputText value=" tagged with #{homeBean.tag}"
+				rendered="#{homeBean.tagView}" /></h1>
+			<ui:repeat var="v_bm" value="#{homeBean.bookmarks}">
+				<div class="bookmark">
+				<h1><a href="#{v_bm.url}">#{v_bm.title}</a></h1>
+				<div class="description">#{v_bm.description}</div>
+				<div class="meta">Posted : <h:outputText
+					value="#{v_bm.addedOn}">
+					<f:convertDateTime dateStyle="medium" />
+				</h:outputText> by <a href="home.jsf?user=#{v_bm.user.username}">#{v_bm.user.username}</a>
+				in <ui:repeat value="#{v_bm.tags}" var="v_tag" varStatus="v_status">
+					<h:outputText value=", " rendered="#{v_status.index != 0}" />
+					<a href="home.jsf?tag=#{v_tag.slug}">#{v_tag.name}</a>
+				</ui:repeat></div>
+				</div>
+			</ui:repeat>
+		</h:panelGroup>
+		<div class="paginator">
+			<h:outputLink value="home.jsf" disabled="#{!homeBean.hasPrevious}" style="float:left">&lt;&lt; Newer
+				<f:param name="user" value="#{homeBean.username}" />
+				<f:param name="firstResult" value="#{homeBean.previousIndex}" />
+				<f:param name="tag" value="#{homeBean.tag}" />
+			</h:outputLink>
+
+			<h:outputLink value="home.jsf" disabled="#{!homeBean.hasNext}" style="float:right">Older &gt;&gt;
+			
+				<f:param name="user" value="#{homeBean.username}" />
+				<f:param name="firstResult" value="#{homeBean.nextIndex}" />
+				<f:param name="tag" value="#{homeBean.tag}" />
+			</h:outputLink>
+		</div>
+
+		
+	</ui:define>
+</ui:composition>
